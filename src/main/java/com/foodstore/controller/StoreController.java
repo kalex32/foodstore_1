@@ -36,13 +36,13 @@ public class StoreController {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated() || subject.isRemembered()) {
             model.addAttribute("login_btn", "/logout");
-            model.addAttribute("login_text", "退出");
-            String userInfo = "欢迎，" + subject.getPrincipal().toString();
-            if (subject.hasRole("vip")) userInfo += "（VIP用户）"; else userInfo += "（普通用户）";
+            model.addAttribute("login_text", "Вихід");
+            String userInfo = "Шановний(ая)，" + subject.getPrincipal().toString();
+            if (subject.hasRole("vip")) userInfo += "（VIP користувач）"; else userInfo += "（Користувач）";
             model.addAttribute("user_info", userInfo);
         } else {
             model.addAttribute("login_btn", "/login");
-            model.addAttribute("login_text", "登录");
+            model.addAttribute("login_text", "Вхід до кабінету");
         }
         return "index";
     }
@@ -53,9 +53,9 @@ public class StoreController {
         List<Food> allFood = deepCopy(foodService.findAll());
         if (subject.isAuthenticated() || subject.isRemembered()) {
             model.addAttribute("login_btn", "/logout");
-            model.addAttribute("login_text", "退出");
-            String userInfo = "欢迎，" + subject.getPrincipal().toString();
-            if (subject.hasRole("vip")) userInfo += "（VIP用户）"; else userInfo += "（普通用户）";
+            model.addAttribute("login_text", "Вихід");
+            String userInfo = "Шановний(ая)，" + subject.getPrincipal().toString();
+            if (subject.hasRole("vip")) userInfo += "（VIP користувач）"; else userInfo += "（Користувач）";
             model.addAttribute("user_info", userInfo);
             model.addAttribute("login_show", "display:none;");
             if (!subject.hasRole("vip")) model.addAttribute("vip_hidden", "display:none;");
@@ -67,7 +67,7 @@ public class StoreController {
             }
         } else {
             model.addAttribute("login_btn", "/login");
-            model.addAttribute("login_text", "登录");
+            model.addAttribute("login_text", "Вхід");
             model.addAttribute("pay_show", "display:none;");
             model.addAttribute("vip_hidden", "display:none;");
         }
@@ -80,24 +80,24 @@ public class StoreController {
         int id = name.charAt(name.length() - 1) - '0';
         List<Food> allFood = deepCopy(foodService.findAll());
         Food curFood = allFood.get(id - 1);
-        String curDiscount = "无";
+        String curDiscount = "нет";
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated() || subject.isRemembered()) {
             model.addAttribute("login_btn", "/logout");
-            model.addAttribute("login_text", "退出");
-            String userInfo = "欢迎，" + subject.getPrincipal().toString();
-            if (subject.hasRole("vip")) userInfo += "（VIP用户）"; else userInfo += "（普通用户）";
+            model.addAttribute("login_text", "Вихід");
+            String userInfo = "Шановний(ая)，" + subject.getPrincipal().toString();
+            if (subject.hasRole("vip")) userInfo += "（VIP користувач）"; else userInfo += "（Користувач）";
             model.addAttribute("user_info", userInfo);
             if (!subject.hasRole("vip")) model.addAttribute("vip_hidden", "display:none;");
             else {
                 if (curFood.getIsvip()) {
                     curFood.setPrice(String.format("%.2f", Double.parseDouble(curFood.getPrice()) * 0.95));
-                    curDiscount = "9.5折";
+                    curDiscount = "9.5складка";
                 }
             }
         } else {
             model.addAttribute("login_btn", "/login");
-            model.addAttribute("login_text", "登录");
+            model.addAttribute("login_text", "войти");
             model.addAttribute("vip_hidden", "display:none;");
         }
         model.addAttribute("all_food", allFood);
@@ -124,8 +124,8 @@ public class StoreController {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated() || subject.isRemembered()) {
             if (!isNumber(str)) return "redirect:/";
-            String userInfo = "欢迎，" + subject.getPrincipal().toString();
-            if (subject.hasRole("vip")) userInfo += "（VIP用户）"; else userInfo += "（普通用户）";
+            String userInfo = "Шановний(ая)，" + subject.getPrincipal().toString();
+            if (subject.hasRole("vip")) userInfo += "（VIP користувач）"; else userInfo += "（Користувач）";
             model.addAttribute("user_info", userInfo);
             return "order";
         } else {
@@ -157,11 +157,11 @@ public class StoreController {
         try{
             subject.login(token);
         } catch (UnknownAccountException e) {
-            msg = "用户名不存在";
+            msg = "Такого користувача не існує";
         } catch (IncorrectCredentialsException e) {
-            msg = "密码错误";
+            msg = "Невірний пароль";
         } catch (AuthenticationException e) {
-            msg = "其他错误：" + e.getMessage();
+            msg = "Інші помилки：" + e.getMessage();
         }
 
         if (msg != null) {
